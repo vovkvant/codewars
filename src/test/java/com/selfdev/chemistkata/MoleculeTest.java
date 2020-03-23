@@ -206,13 +206,13 @@ public class MoleculeTest {
         m.brancher(1, 6, 4);
         m.addChaining(1, 1, "C", "Br");
         m.mutate(new T(1, 1, "H"));
-        System.out.println(m);
         m.closer();
         m.unlock();
         System.out.println(m);
         m.bounder(new T(5, 1, 3, 2));
+        System.out.println(m);
         m.closer();
-        System.out.println(m.toString());
+        //System.out.println(m.toString());
         List<String> expected = Arrays.asList("Atom(C.1: C2,H,H,H)", "Atom(C.2: C1,C3,H,H)", "Atom(C.3: C2,C4,H,H)", "Atom(C.4: C3,C5,H,H)",
                 "Atom(C.5: C4,C6,C9,H)", "Atom(C.6: C5,H,H,H)", "Atom(C.7: C8,H,H,H)", "Atom(C.8: C7,C9,H,H)",
                 "Atom(C.9: C5,C8,C10,H)", "Atom(C.10: C9,H,H,H)", "Atom(C.11: Br12,H,H,H)", "Atom(Br.12: C11)");
@@ -366,5 +366,13 @@ public class MoleculeTest {
         m.unlock();
         System.out.println(m);
     }
+
+    /**
+     * brancher: [3]
+     * add: [T(2, 1, H)]
+     * brancher: [1]
+     * bounder: [T(2, 1, 1, 2)]
+     * closer
+     */
 
 }

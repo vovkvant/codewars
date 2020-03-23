@@ -375,6 +375,12 @@ public class Molecule {
             }
         }
 
+        Atom atom = null;
+        while((atom = getByCursor(chains, chainCursor))!=null) {
+            atom.setId(atomCounter++);
+            chainCursor++;
+        }
+
         if (newBranchAtomsMap.size() == 0) {
             throw new EmptyMolecule();
         }
@@ -387,7 +393,7 @@ public class Molecule {
 
     private Atom getByCursor(Map<Integer, LinkedList<Atom>> branch, int cursor) {
         int counter = 0;
-        for(int i = 1; i < branch.size(); i++) {
+        for(int i = 1; i <= branch.size(); i++) {
             LinkedList<Atom> chain = branch.get(i);
             if(chain!=null) {
                 for(int j = 0; j < chain.size(); j++) {
