@@ -28,6 +28,10 @@ class Atom implements Comparable {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void mutate(String elt) {
         AtomEnum newAtomEnum = AtomEnum.valueOf(elt);
         AtomEnum oldAtomEnum = AtomEnum.valueOf(element);

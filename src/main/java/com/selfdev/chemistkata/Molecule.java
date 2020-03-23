@@ -14,9 +14,9 @@ public class Molecule {
     private boolean locked = false;
 
     Map<Integer, LinkedList<Atom>> branchAtomsMap = new HashMap<>();
-    Map<Integer, LinkedList<Atom>>  chains =  new HashMap<>();
+    Map<Integer, LinkedList<Atom>> chains = new HashMap<>();
 
-    public Molecule(){
+    public Molecule() {
         this.name = "";
     }
 
@@ -68,12 +68,12 @@ public class Molecule {
         Collections.sort(finalBranchList, new Comparator<Atom>() {
             @Override
             public int compare(Atom o1, Atom o2) {
-                    if (o1.id > o2.id) {
-                        return 1;
-                    }
-                    if (o1.id < o2.id) {
-                        return -1;
-                    }
+                if (o1.id > o2.id) {
+                    return 1;
+                }
+                if (o1.id < o2.id) {
+                    return -1;
+                }
                 return 0;
             }
         });
@@ -141,7 +141,7 @@ public class Molecule {
 
             Atom atom_1 = branchAtomsMap.get(bond.b1).get(bond.c1 - 1);
             Atom atom_2 = branchAtomsMap.get(bond.b2).get(bond.c2 - 1);
-            if(atom_1.isPossibleToAdd(atom_2) && atom_2.isPossibleToAdd(atom_1)) {
+            if (atom_1.isPossibleToAdd(atom_2) && atom_2.isPossibleToAdd(atom_1)) {
                 atom_1.addRelatedAtom(atom_2);
                 atom_2.addRelatedAtom(atom_1);
             } else {
@@ -163,11 +163,11 @@ public class Molecule {
         }
         System.out.println("mutate: " + Arrays.toString(mutations));
         Arrays.stream(mutations).forEach(mutation -> {
-            if(branchAtomsMap.get(mutation.nb) == null) {
+            if (branchAtomsMap.get(mutation.nb) == null) {
                 throw new InvalidBond();
             }
 
-            if(branchAtomsMap.get(mutation.nb).get(mutation.nc - 1) == null) {
+            if (branchAtomsMap.get(mutation.nb).get(mutation.nc - 1) == null) {
                 throw new InvalidBond();
             }
             Atom atom = branchAtomsMap.get(mutation.nb).get(mutation.nc - 1);
@@ -189,22 +189,22 @@ public class Molecule {
         Arrays.stream(atoms).forEach(atom -> {
             Atom newAtom = new Atom(atom.elt, atomCounter++);
 
-            if(branchAtomsMap.get(atom.nb) == null) {
+            if (branchAtomsMap.get(atom.nb) == null) {
                 atomCounter--;
                 throw new InvalidBond();
             }
 
-            if(branchAtomsMap.get(atom.nb).get(atom.nc - 1) == null) {
+            if (branchAtomsMap.get(atom.nb).get(atom.nc - 1) == null) {
                 atomCounter--;
                 throw new InvalidBond();
             }
 
             Atom a = branchAtomsMap.get(atom.nb).get(atom.nc - 1);
 
-            try{
+            try {
                 newAtom.addRelatedAtom(a);
                 a.addRelatedAtom(newAtom);
-            } catch (InvalidBond e){
+            } catch (InvalidBond e) {
                 atomCounter--;
                 throw new InvalidBond();
             }
@@ -236,7 +236,7 @@ public class Molecule {
         LinkedList<Atom> newAtomsList = new LinkedList<>();
 
         int iterationCounter = 0;
-        for(String elt: elts) {
+        for (String elt : elts) {
             Atom newAtom = new Atom(elt, atomCounter++);
             iterationCounter++;
             if (newAtomsList.size() != 0) {
@@ -252,22 +252,22 @@ public class Molecule {
             newAtomsList.add(newAtom);
         }
 
-        if(branchAtomsMap.get(nb) == null) {
-            atomCounter-=newAtomsList.size();
+        if (branchAtomsMap.get(nb) == null) {
+            atomCounter -= newAtomsList.size();
             throw new InvalidBond();
         }
 
-        if(branchAtomsMap.get(nb).get(nc - 1) == null) {
-            atomCounter-=newAtomsList.size();
+        if (branchAtomsMap.get(nb).get(nc - 1) == null) {
+            atomCounter -= newAtomsList.size();
             throw new InvalidBond();
         }
 
         Atom atom = branchAtomsMap.get(nb).get(nc - 1);
-        try{
+        try {
             newAtomsList.getFirst().addRelatedAtom(atom);
             atom.addRelatedAtom(newAtomsList.getFirst());
-        } catch (InvalidBond e){
-            atomCounter-=newAtomsList.size();
+        } catch (InvalidBond e) {
+            atomCounter -= newAtomsList.size();
             throw new InvalidBond();
         }
 
@@ -298,7 +298,7 @@ public class Molecule {
         return this;
     }
 
-    private void subClose(Map<Integer, LinkedList<Atom>>  map){
+    private void subClose(Map<Integer, LinkedList<Atom>> map) {
         map.values().forEach(branch -> {
             List<Atom> addedAtoms = new ArrayList<>();
             branch.forEach(atom -> {
@@ -324,64 +324,55 @@ public class Molecule {
         Map<Integer, LinkedList<Atom>> newBranchAtomsMap = new HashMap<>();
         Map<Integer, LinkedList<Atom>> newChains = new HashMap<>();
 
-        atomCounter = 1;
         int newBranchCounter = 0;
-        for(int i = 1; i <= lastBranchId; i++){
+        for (int i = 1; i <= lastBranchId; i++) {
             LinkedList<Atom> branch = branchAtomsMap.get(i);
-            LinkedList<Atom> chain = chains.get(i);
-            LinkedList<Atom> newBranch = branch
-                    .stream()
-                    .filter(atom -> !"H".equals(atom.getElement()))
-                    .collect(Collectors.toCollection(LinkedList::new));
-
-            LinkedList<Atom> newChain = null;
-            if(chain!= null) {
-                newChain = chain
-                        .stream()
-                        .filter(atom -> !"H".equals(atom.getElement()))
-                        .collect(Collectors.toCollection(LinkedList::new));
-            }
-
-            int size = branch.size();
-            if(newChain!= null) {
-                size = (branch.size() > chain.size()) ? branch.size() : newChain.size();
-            }
-            for(int j = 0; j < size; j++){
-                Atom branchAtom = null;
-                if(branch.size() > j) {
-                    branchAtom = branch.get(j);
-                    branchAtom.removeAllHydrogens();
-                }
-
-                if(newChain!=null && newChain.size() > j) {
-                    Atom chainAtom = newChain.get(j);
-                    if(chainAtom !=null) {
-                        chainAtom.removeAllHydrogens();
-                        if(branchAtom != null) {
-                            if(branchAtom.id - chainAtom.id == 1) {
-                                chainAtom.setId(atomCounter++);
-                            }
-                            branchAtom.setId(atomCounter++);
-                        } else {
-                            chainAtom.setId(atomCounter++);
-                        }
-                    }
-                }
-
-                if(branchAtom != null) {
-                    branchAtom.setId(atomCounter++);
-                }
-
-            }
-
-            if(newBranch!= null && newBranch.size() != 0) {
+            LinkedList<Atom> newBranch = createNewBranch(branch);
+            if (newBranch.size() != 0) {
                 newBranchCounter++;
                 newBranchAtomsMap.put(newBranchCounter, newBranch);
             }
-            if(newChain!=null && newChain.size() != 0) {
-                newChains.put(newBranchCounter, newChain);
-            }
+        }
 
+        //chains
+        for (int i = 1; i <= lastBranchId; i++) {
+            //re-calculate chains
+            LinkedList<Atom> chain = chains.get(i);
+            if (chain != null) {
+                LinkedList<Atom> newChain = createNewBranch(chain);
+                if (newChain.size() != 0) {
+                    newChains.put(i, newChain);
+                }
+            }
+        }
+
+        //re-calculate ids
+        atomCounter = 1;
+        int chainCursor = 0;
+        for (int i = 1; i <= newBranchCounter; i++) {
+            LinkedList<Atom> branch = newBranchAtomsMap.get(i);
+            for (int j = 0; j < branch.size(); j++) {
+                Atom branchAtom = branch.get(j);
+                Atom chainAtom = getByCursor(chains, chainCursor);
+                if (chainAtom != null) {
+                    if (chainAtom.getId() - branchAtom.getId() > 1) {
+                        branchAtom.setId(atomCounter++);
+                    } else if(chainAtom.getId() - branchAtom.getId() < 1) {
+                        chainAtom.setId(atomCounter++);
+                        j--;
+                        chainCursor++;
+                    } else
+                    if(chainAtom.getId() - branchAtom.getId() == 1) {
+                        branchAtom.setId(atomCounter++);
+                        chainAtom.setId(atomCounter++);
+                        chainCursor++;
+                    } else {
+                        branchAtom.setId(atomCounter++);
+                    }
+                } else {
+                    branchAtom.setId(atomCounter++);
+                }
+            }
         }
 
         if (newBranchAtomsMap.size() == 0) {
@@ -394,6 +385,35 @@ public class Molecule {
         return this;
     }
 
+    private Atom getByCursor(Map<Integer, LinkedList<Atom>> branch, int cursor) {
+        int counter = 0;
+        for(int i = 1; i < branch.size(); i++) {
+            LinkedList<Atom> chain = branch.get(i);
+            if(chain!=null) {
+                for(int j = 0; j < chain.size(); j++) {
+                    if(counter == cursor) {
+                        return chain.get(j);
+                    }
+                    counter++;
+                }
+            }
+        }
+        return null;
+    }
+
+    private LinkedList<Atom> createNewBranch(LinkedList<Atom> branch) {
+        LinkedList<Atom> newBranch = branch
+                .stream()
+                .filter(atom -> !"H".equals(atom.getElement()))
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        newBranch.stream().forEach(atom -> {
+            atom.removeAllHydrogens();
+        });
+        return newBranch;
+    }
+
+
     public Molecule unlock2() {
         Map<Integer, LinkedList<Atom>> newBranchAtomsMap = new HashMap<>();
         Map<Integer, LinkedList<Atom>> newChains = new HashMap<>();
@@ -401,20 +421,20 @@ public class Molecule {
         int removed = 0;
         atomCounter = 1;
         int newBranchCounter = 0;
-        for(int i = 1; i <= lastBranchId; i++){
+        for (int i = 1; i <= lastBranchId; i++) {
             LinkedList<Atom> branch = branchAtomsMap.get(i);
             LinkedList<Atom> newBranch = createNewBranch(branch);
-            if(newBranch.size() != 0) {
+            if (newBranch.size() != 0) {
                 newBranchCounter++;
                 newBranchAtomsMap.put(newBranchCounter, newBranch);
             }
         }
 
         //chains
-        for(int i = 0; i <= lastBranchId; i++) {
+        for (int i = 0; i <= lastBranchId; i++) {
             //re-calculate chains
             LinkedList<Atom> chain = chains.get(i);
-            if(chain != null) {
+            if (chain != null) {
                 LinkedList<Atom> newChain = chain
                         .stream()
                         .filter(atom -> !"H".equals(atom.getElement()))
@@ -425,7 +445,7 @@ public class Molecule {
                     atom.removeAllHydrogens();
                     atom.setId(atomCounter++);
                 });
-                if(newChain.size() != 0) {
+                if (newChain.size() != 0) {
                     newChains.put(newBranchCounter, newChain);
                 }
             }
@@ -443,19 +463,7 @@ public class Molecule {
 
 
 
-    private LinkedList<Atom> createNewBranch(LinkedList<Atom> branch) {
-        LinkedList<Atom> newBranch = branch
-                .stream()
-                .filter(atom -> !"H".equals(atom.getElement()))
-                .collect(Collectors.toCollection(LinkedList::new));
 
-        //re-calculate atom ids
-        newBranch.stream().forEach(atom -> {
-            atom.removeAllHydrogens();
-            atom.setId(atomCounter++);
-        });
-        return newBranch;
-    }
 
 
 
