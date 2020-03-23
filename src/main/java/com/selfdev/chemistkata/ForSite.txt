@@ -195,6 +195,19 @@ Examples: "Atom(C.2: C3,C14,O6,H)" or "Atom(C.24: C1,O6,N2,H)"
         return 0;
     }
 
+    public int compareById(Object o) {
+        if (o instanceof Atom && o != null) {
+            Atom anotherAtom = (Atom) o;
+            if (this.id > anotherAtom.id) {
+                return 1;
+            }
+            if (this.id < anotherAtom.id) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
 }
 
 public class Molecule {
@@ -476,6 +489,7 @@ public class Molecule {
     Finalize the molecule instance, adding missing hydrogens everywhere and locking the object (see "behaviors" part below).
      */
     public Molecule closer() {
+        System.out.println("closer");
         if (locked) {
             throw new LockedMolecule();
         }
@@ -510,46 +524,37 @@ public class Molecule {
      */
     //!!!!!!!!!!!!!!!this method doesn't work properly
     public Molecule unlock() {
-
         Map<Integer, LinkedList<Atom>> newBranchAtomsMap = new HashMap<>();
         Map<Integer, LinkedList<Atom>> newChains = new HashMap<>();
 
         atomCounter = 1;
         int newBranchCounter = 0;
+        int chainId = 1;
         for(int i = 1; i <= lastBranchId; i++){
             LinkedList<Atom> branch = branchAtomsMap.get(i);
-
-            LinkedList<Atom> newBranch = branch
-                    .stream()
-                    .filter(atom -> !"H".equals(atom.getElement()))
-                    .collect(Collectors.toCollection(LinkedList::new));
-
-            //re-calculate atom ids
-            newBranch.stream().forEach(atom -> {
-                atom.removeAllHydrogens();
-                atom.setId(atomCounter++);
-            });
-
-            if(newBranch.size() != 0) {
-                newBranchCounter++;
-                newBranchAtomsMap.put(newBranchCounter, newBranch);
+            LinkedList<Atom> chain = chains.get(chainId);
+            if (chain != null && branch.getFirst().compareById(chain.getFirst()) == 1) {
+                chainId++;
+                i--;
+                LinkedList<Atom> newChain = createNewBranch(chain);
+                if(newChain.size() != 0) {
+                    newChains.put(newBranchCounter, newChain);
+                }
+            } else {
+                LinkedList<Atom> newBranch = createNewBranch(branch);
+                if(newBranch.size() != 0) {
+                    newBranchCounter++;
+                    newBranchAtomsMap.put(newBranchCounter, newBranch);
+                }
             }
         }
 
 
-        for(int i = 1; i <= lastBranchId; i++){
+        for(; chainId <= lastBranchId; chainId++){
             //re-calculate chains
-            LinkedList<Atom> chain = chains.get(i);
+            LinkedList<Atom> chain = chains.get(chainId);
             if(chain != null) {
-                LinkedList<Atom> newChain = chain
-                        .stream()
-                        .filter(atom -> !"H".equals(atom.getElement()))
-                        .collect(Collectors.toCollection(LinkedList::new));
-                newChain.stream().forEach(atom -> {
-                    atom.removeAllHydrogens();
-                    atom.setId(atomCounter++);
-                });
-
+                LinkedList<Atom> newChain = createNewBranch(chain);
                 if(newChain.size() != 0) {
                     newChains.put(newBranchCounter, newChain);
                 }
@@ -564,6 +569,20 @@ public class Molecule {
         lastBranchId = newBranchCounter;
         locked = false;
         return this;
+    }
+
+    private LinkedList<Atom> createNewBranch(LinkedList<Atom> branch){
+        LinkedList<Atom> newBranch = branch
+                .stream()
+                .filter(atom -> !"H".equals(atom.getElement()))
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        //re-calculate atom ids
+        newBranch.stream().forEach(atom -> {
+            atom.removeAllHydrogens();
+            atom.setId(atomCounter++);
+        });
+        return newBranch;
     }
 
 
@@ -601,4 +620,3 @@ public class Molecule {
     }
 
 }
-

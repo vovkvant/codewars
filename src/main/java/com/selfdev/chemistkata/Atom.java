@@ -151,4 +151,17 @@ Examples: "Atom(C.2: C3,C14,O6,H)" or "Atom(C.24: C1,O6,N2,H)"
         return 0;
     }
 
+    public int compareById(Object o) {
+        if (o instanceof Atom && o != null) {
+            Atom anotherAtom = (Atom) o;
+            if (this.id > anotherAtom.id) {
+                return 1;
+            }
+            if (this.id < anotherAtom.id) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
 }
