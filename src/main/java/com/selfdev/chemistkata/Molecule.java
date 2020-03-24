@@ -321,6 +321,7 @@ public class Molecule {
      */
     //!!!!!!!!!!!!!!!this method doesn't work properly
     public Molecule unlock() {
+        System.out.println("unlock");
         Map<Integer, LinkedList<Atom>> newBranchAtomsMap = new HashMap<>();
         Map<Integer, LinkedList<Atom>> newChains = new HashMap<>();
 
@@ -353,7 +354,7 @@ public class Molecule {
             LinkedList<Atom> branch = newBranchAtomsMap.get(i);
             for (int j = 0; j < branch.size(); j++) {
                 Atom branchAtom = branch.get(j);
-                Atom chainAtom = getByCursor(chains, chainCursor);
+                Atom chainAtom = getByCursor(newChains, chainCursor);
                 if (chainAtom != null) {
                     if (chainAtom.getId() - branchAtom.getId() > 1) {
                         branchAtom.setId(atomCounter++);
@@ -376,7 +377,7 @@ public class Molecule {
         }
 
         Atom atom = null;
-        while((atom = getByCursor(chains, chainCursor))!=null) {
+        while((atom = getByCursor(newChains, chainCursor))!=null) {
             atom.setId(atomCounter++);
             chainCursor++;
         }
@@ -393,8 +394,8 @@ public class Molecule {
 
     private Atom getByCursor(Map<Integer, LinkedList<Atom>> branch, int cursor) {
         int counter = 0;
-        for(int i = 1; i <= branch.size(); i++) {
-            LinkedList<Atom> chain = branch.get(i);
+        for(Map.Entry<Integer, LinkedList<Atom>> entry:branch.entrySet()) {
+            LinkedList<Atom> chain = entry.getValue();
             if(chain!=null) {
                 for(int j = 0; j < chain.size(); j++) {
                     if(counter == cursor) {

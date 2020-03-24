@@ -36,15 +36,15 @@ class Atom implements Comparable {
         AtomEnum newAtomEnum = AtomEnum.valueOf(elt);
         AtomEnum oldAtomEnum = AtomEnum.valueOf(element);
 
+        int oldAvailableValency = availableValency;
         int valencyDelta = oldAtomEnum.getValenceNumber() - availableValency;
         availableValency = newAtomEnum.getValenceNumber() - valencyDelta;
         if (availableValency < 0) {
-            availableValency = newAtomEnum.getValenceNumber() + valencyDelta;
+            availableValency = oldAvailableValency;
             throw new InvalidBond();
         }
         atomEnum = newAtomEnum;
         element = elt;
-
     }
 
     @Override

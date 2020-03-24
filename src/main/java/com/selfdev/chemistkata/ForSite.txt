@@ -81,15 +81,15 @@ class Atom implements Comparable {
         AtomEnum newAtomEnum = AtomEnum.valueOf(elt);
         AtomEnum oldAtomEnum = AtomEnum.valueOf(element);
 
+        int oldAvailableValency = availableValency;
         int valencyDelta = oldAtomEnum.getValenceNumber() - availableValency;
         availableValency = newAtomEnum.getValenceNumber() - valencyDelta;
         if (availableValency < 0) {
-            availableValency = newAtomEnum.getValenceNumber() + valencyDelta;
+            availableValency = oldAvailableValency;
             throw new InvalidBond();
         }
         atomEnum = newAtomEnum;
         element = elt;
-
     }
 
     @Override
@@ -529,6 +529,7 @@ public class Molecule {
      */
     //!!!!!!!!!!!!!!!this method doesn't work properly
     public Molecule unlock() {
+        System.out.println("unlock");
         Map<Integer, LinkedList<Atom>> newBranchAtomsMap = new HashMap<>();
         Map<Integer, LinkedList<Atom>> newChains = new HashMap<>();
 
@@ -561,7 +562,7 @@ public class Molecule {
             LinkedList<Atom> branch = newBranchAtomsMap.get(i);
             for (int j = 0; j < branch.size(); j++) {
                 Atom branchAtom = branch.get(j);
-                Atom chainAtom = getByCursor(chains, chainCursor);
+                Atom chainAtom = getByCursor(newChains, chainCursor);
                 if (chainAtom != null) {
                     if (chainAtom.getId() - branchAtom.getId() > 1) {
                         branchAtom.setId(atomCounter++);
@@ -583,11 +584,11 @@ public class Molecule {
             }
         }
 
-                Atom atom = null;
-                while((atom = getByCursor(chains, chainCursor))!=null) {
-                    atom.setId(atomCounter++);
-                    chainCursor++;
-                }
+        Atom atom = null;
+        while((atom = getByCursor(newChains, chainCursor))!=null) {
+            atom.setId(atomCounter++);
+            chainCursor++;
+        }
 
         if (newBranchAtomsMap.size() == 0) {
             throw new EmptyMolecule();
@@ -601,8 +602,8 @@ public class Molecule {
 
     private Atom getByCursor(Map<Integer, LinkedList<Atom>> branch, int cursor) {
         int counter = 0;
-        for(int i = 1; i <= branch.size(); i++) {
-            LinkedList<Atom> chain = branch.get(i);
+        for(Map.Entry<Integer, LinkedList<Atom>> entry:branch.entrySet()) {
+            LinkedList<Atom> chain = entry.getValue();
             if(chain!=null) {
                 for(int j = 0; j < chain.size(); j++) {
                     if(counter == cursor) {

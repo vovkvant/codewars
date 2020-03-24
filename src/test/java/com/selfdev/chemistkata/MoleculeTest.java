@@ -367,11 +367,64 @@ public class MoleculeTest {
         System.out.println(m);
     }
 
+    @Test
+    public void test_Unlock_removeH_and_idNumbersUpdate(){
+        Molecule m = new Molecule("test_Unlock_removeH_and_idNumbersUpdate");
+        m.brancher(3);
+        m.add(new T(2, 1, "H"));
+        m.brancher(1);
+        m.bounder(new T(2, 1, 1, 2));
+        m.closer();
+        m.unlock();
+        System.out.println(m);
+    }
+
+    @Test
+    public void randomTest6(){
+        Molecule m = new Molecule("randomTest5");
+        m.brancher(2, 1);
+        m.add(new T(1, 1, "P"), new T(2, 1, "Mg"));
+        m.add(new T(1, 2, "P"), new T(1, 1, "Mg"));
+        m.add(new T(1, 1, "F"), new T(2, 1, "Mg"));
+        try {
+            m.mutate(new T(2, 1, "B"), new T(1, 2, "O"), new T(1, 1, "H"));
+        } catch (Exception e) {
+
+        }
+        m.closer();
+        System.out.println(m);
+    }
     /**
-     * brancher: [3]
-     * add: [T(2, 1, H)]
-     * brancher: [1]
-     * bounder: [T(2, 1, 1, 2)]
+     * brancher: [7, 8, 1]
+     * add: [T(2, 2, O), T(8, 2, P)]
+     * bounder: [T(1, 3, 6, 2)]
+     * closer
+     * addChaining: nc=1 nb=3 [P]
+     * unlock
+     * brancher: [1, 4]
+     */
+
+    @Test
+    public void randomTest7(){
+        Molecule m = new Molecule("randomTest5");
+        m.brancher(7, 8, 1);
+        m.add(new T(2, 2, "O"), new T(8, 2, "P"));
+        m.bounder(new T(1, 3, 6, 2));
+        m.closer();
+        //m.addChaining(1,3, "P");
+        m.unlock();
+        m.brancher(1,4);
+        System.out.println(m);
+    }
+
+
+
+
+
+    /**
+     * brancher: [6, 8]
+     * add: [T(5, 1, O), T(8, 2, O), T(3, 1, F)]
+     * add: [T(2, 2, Br), T(6, 2, Mg)]
      * closer
      */
 
