@@ -394,8 +394,33 @@ public class Molecule {
 
     private Atom getByCursor(Map<Integer, LinkedList<Atom>> branch, int cursor) {
         int counter = 0;
+        Set<Atom> set = new TreeSet<>(new Comparator<Atom>() {
+            @Override
+            public int compare(Atom o1, Atom o2) {
+                    if (o1.id > o2.id) {
+                        return 1;
+                    }
+                    if (o1.id < o2.id) {
+                        return -1;
+                    }
+                return 0;
+            }
+        });
         for(Map.Entry<Integer, LinkedList<Atom>> entry:branch.entrySet()) {
             LinkedList<Atom> chain = entry.getValue();
+            for(Atom atom:chain) {
+                set.add(atom);
+            }
+        }
+        LinkedList<Atom> list = new LinkedList<>(set);
+        if(cursor < list.size()) {
+            return list.get(cursor);
+        } else {
+            return null;
+        }
+
+    }
+       /*
             if(chain!=null) {
                 for(int j = 0; j < chain.size(); j++) {
                     if(counter == cursor) {
@@ -404,9 +429,7 @@ public class Molecule {
                     counter++;
                 }
             }
-        }
-        return null;
-    }
+            */
 
     private LinkedList<Atom> createNewBranch(LinkedList<Atom> branch) {
         LinkedList<Atom> newBranch = branch

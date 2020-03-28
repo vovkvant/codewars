@@ -418,14 +418,49 @@ public class MoleculeTest {
     }
 
 
-
-
-
+    @Test
+    public void randomTest8(){
+        Molecule m = new Molecule("randomTest8");
+        m.brancher(7, 2);
+        m.mutate(new T(1, 2, "S"), new T(1, 2, "C"), new T(2, 2, "Mg"));
+        m.brancher(1, 4);
+        m.mutate(new T(2, 1, "P"), new T(1, 4, "H"));
+        m.brancher(2);
+        m.brancher(2, 5, 8);
+        m.closer();
+        m.unlock();
+        m.addChaining(1, 5, "S", "P", "S");
+        m.add(new T(1, 7, "B"));
+        m.brancher(7, 8);
+        m.add(new T(2, 7, "Br"), new T(1, 1, "Br"), new T(2, 6, "H"));
+        System.out.println(m);
+        m.closer();
+        m.unlock();
+        System.out.println(m);
+    }
     /**
-     * brancher: [6, 8]
-     * add: [T(5, 1, O), T(8, 2, O), T(3, 1, F)]
-     * add: [T(2, 2, Br), T(6, 2, Mg)]
+     * brancher: [7, 2]
+     * mutate: [T(1, 2, S), T(1, 2, C), T(2, 2, Mg)]
+     * brancher: [1, 4]
+     * mutate: [T(2, 1, P), T(1, 4, H)]
+     * brancher: [2]
+     * brancher: [2, 5, 8]
      * closer
+     * unlock
+     * addChaining: nc=1 nb=5 [S, P, S]
+     * add: [T(1, 7, B)]
+     * brancher: [7, 8]
+     * add: [T(2, 7, Br), T(1, 1, Br), T(2, 6, H)]
+     * closer
+     * unlock
+     *
+     * java.lang.AssertionError: expected:<
+     *
+     * [Atom(C.1: Br51,P2), Atom(P.2: C1,C3), Atom(C.3: C4,P2), Atom(C.4: C3,C5), Atom(C.5: C4,C6), Atom(C.6: C5,C7), Atom(C.7: C6), Atom(C.8: Mg9), Atom(Mg.9: C8), Atom(C.10), Atom(C.11: C12), Atom(C.12: C11,C13), Atom(C.13: C12), Atom(C.14: C15,S31), Atom(C.15: C14), Atom(C.16: C17), Atom(C.17: C16), Atom(C.18: C19,B34), Atom(C.19: C18,C20,Br50), Atom(C.20: C19,C21), Atom(C.21: C20,C22), Atom(C.22: C21), Atom(C.23: C24), Atom(C.24: C23,C25), Atom(C.25: C24,C26), Atom(C.26: C25,C27), Atom(C.27: C26,C28), Atom(C.28: C27,C29), Atom(C.29: C28,C30), Atom(C.30: C29), Atom(S.31: C14,P32), Atom(P.32: S31,S33), Atom(S.33: P32), Atom(B.34: C18), Atom(C.35: C36), Atom(C.36: C35,C37), Atom(C.37: C36,C38), Atom(C.38: C37,C39), Atom(C.39: C38,C40), Atom(C.40: C39,C41), Atom(C.41: C40), Atom(C.42: C43), Atom(C.43: C42,C44), Atom(C.44: C43,C45), Atom(C.45: C44,C46), Atom(C.46: C45,C47), Atom(C.47: C46,C48), Atom(C.48: C47,C49), Atom(C.49: C48), Atom(Br.50: C19), Atom(Br.51: C1)]
+     *
+     * > but was:<
+     *
+     * [Atom(C.1: Br46,P2), Atom(P.2: C1,C3), Atom(C.3: C4,P2), Atom(C.4: C3,C5), Atom(C.5: C4,C6), Atom(C.6: C5,C7), Atom(C.7: C6), Atom(C.8: Mg9), Atom(Mg.9: C8), Atom(C.10), Atom(C.11: C12), Atom(C.12: C11,C13), Atom(C.13: C12), Atom(C.14: C15,S47), Atom(C.15: C14), Atom(C.16: C17), Atom(C.17: C16), Atom(C.18: C19,B50), Atom(C.19: C18,C20,Br51), Atom(C.20: C19,C21), Atom(C.21: C20,C22), Atom(C.22: C21), Atom(C.23: C24), Atom(C.24: C23,C25), Atom(C.25: C24,C26), Atom(C.26: C25,C27), Atom(C.27: C26,C28), Atom(C.28: C27,C29), Atom(C.29: C28,C30), Atom(C.30: C29), Atom(C.31: C32), Atom(C.32: C31,C33), Atom(C.33: C32,C34), Atom(C.34: C33,C35), Atom(C.35: C34,C36), Atom(C.36: C35,C37), Atom(C.37: C36), Atom(C.38: C39), Atom(C.39: C38,C40), Atom(C.40: C39,C41), Atom(C.41: C40,C42), Atom(C.42: C41,C43), Atom(C.43: C42,C44), Atom(C.44: C43,C45), Atom(C.45: C44), Atom(Br.46: C1), Atom(S.47: C14,P48), Atom(P.48: S47,S49), Atom(S.49: P48), Atom(B.50: C18), Atom(Br.51: C19)]>
      */
 
 }
