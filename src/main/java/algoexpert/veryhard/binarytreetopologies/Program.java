@@ -6,7 +6,6 @@ class Program {
     }
 
     public static int numberOfBinaryTreeTopologies(int n) {
-        // Write your code here.
         if (n == 0 || n == 1) return 1;
         if (n == 2) return 2;
 
