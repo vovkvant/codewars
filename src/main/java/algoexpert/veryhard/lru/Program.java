@@ -1,4 +1,4 @@
-package algoexpert.lru;
+package algoexpert.veryhard.lru;
 
 import java.util.HashMap;
 import java.util.Map;

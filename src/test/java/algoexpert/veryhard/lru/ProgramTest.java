@@ -1,4 +1,4 @@
-package algoexpert.lru;
+package algoexpert.veryhard.lru;
 
 import org.junit.Test;
 

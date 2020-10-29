@@ -1,4 +1,4 @@
-package algoexpert.calendarmatching;
+package algoexpert.veryhard.calendarmatching;
 
 import java.util.*;
 import java.util.stream.Collectors;

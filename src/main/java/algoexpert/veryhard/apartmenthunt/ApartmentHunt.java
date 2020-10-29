@@ -1,4 +1,4 @@
-package algoexpert.apartmenthunt;
+package algoexpert.veryhard.apartmenthunt;
 
 import java.util.*;
 

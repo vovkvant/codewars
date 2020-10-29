@@ -1,4 +1,4 @@
-package algoexpert.calendarmatching;
+package algoexpert.veryhard.calendarmatching;
 
 import org.junit.Test;
 
