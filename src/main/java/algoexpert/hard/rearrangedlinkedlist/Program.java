@@ -22,33 +22,32 @@ public class Program {
         LinkedList listToMoveTail = null;
         LinkedList prev = null;
         LinkedList oldHead = head;
-        while(head !=null) {
-            List array = linkedListToArray(oldHead);
-            System.out.println(array);
-            if(prev!=null) {
-                System.out.println(prev.value);
-            } else {
-                System.out.println("prev = null");
-            }
-            if(head.value == k) {
-                if(listToMoveHead != null) {
-                    prev.next = head;
+        while (head != null) {
+            if (head.value == k) {
+                System.out.println("=====");
+                if (listToMoveHead != null) {
+                    if (prev == null) {
+                        oldHead = head;
+                    } else {
+                        prev.next = head;
+                    }
                     listToMoveTail.next = head.next;
                     head.next = listToMoveHead;
                     listToMoveHead = head;
-                } else{
+                    head = listToMoveTail.next;
+                } else {
                     listToMoveHead = head;
                     listToMoveTail = head;
+                    head = head.next;
                 }
-                head = head.next;
                 continue;
             }
-            if(head.value < k) {
-                if(listToMoveHead != null) {
-                    if(listToMoveHead == oldHead) {
+            if (head.value < k) {
+                if (listToMoveHead != null) {
+                    if (listToMoveHead == oldHead) {
                         oldHead = head;
                     }
-                    if(prev!=null) {
+                    if (prev != null) {
                         prev.next = head;
                     }
                     prev = head;
@@ -56,14 +55,14 @@ public class Program {
                     listToMoveTail.next = head.next;
                     head.next = listToMoveHead;
                     head = listToMoveTail.next;
-                    continue;
                 } else {
                     prev = head;
                     head = head.next;
                 }
+                continue;
             }
-            if(head.value > k) {
-                if(listToMoveHead == null) {
+            if (head.value > k) {
+                if (listToMoveHead == null) {
                     listToMoveHead = head;
                 }
                 listToMoveTail = head;
