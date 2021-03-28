@@ -36,9 +36,10 @@ public class Program {
                 j++;
             }
             if (first && second) {
-                if (subSearch(k+1, i - 1, j, arr1, arr2, arr3)) i--;
-                if (subSearch(k+1, i, j - 1, arr1, arr2, arr3)) j--;
-                continue;
+                boolean subResult1 = subSearch(k+1, i - 1, j, arr1, arr2, arr3);
+                boolean subResult2 = subSearch(k+1, i, j - 1, arr1, arr2, arr3);
+                result = subResult1 || subResult2;
+                return result;
             } else {
                 result = first || second;
             }
