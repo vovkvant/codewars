@@ -1,6 +1,9 @@
 package algoexpert.hard.shortenpath;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Program {
 
@@ -12,16 +15,17 @@ public class Program {
     public static String shortenPath(String path) {
         // Write your code here;
         LinkedList<String> stack = new LinkedList<>();
-        int i = 0;
         boolean absolute = false;
         if (path.startsWith("/")) {
             absolute = true;
         }
-        String[] str = path.split("/");
-        
+        String[] arr = path.split("/");
 
-        for (; i < str.length; i++) {
-            if ("..".equals(str[i])) {
+        List<String> stringList = Arrays.stream(arr)
+                .filter(s -> !s.equals(".")).filter(s -> s.length() > 0).collect(Collectors.toList());
+
+        for (String str : stringList) {
+            if ("..".equals(str)) {
                 if (absolute) {
                     if (stack.size() > 0) {
                         stack.pollLast();
@@ -30,24 +34,19 @@ public class Program {
                     if (stack.size() > 0 && !stack.getLast().endsWith("..")) {
                         stack.pollLast();
                     } else {
-                        stack.addLast((stack.size() == 0 && !absolute ? "" : "/") + str[i]);
+                        stack.addLast((stack.size() == 0 ? "" : "/") + str);
                     }
                 }
-            } else if (str[i].length() > 0 && !".".equals(str[i])) {
-                stack.addLast((stack.size() == 0 && !absolute ? "" : "/") + str[i]);
+            } else {
+                stack.addLast((stack.size() == 0 && !absolute ? "" : "/") + str);
             }
         }
 
-        if(stack.size() == 0 && absolute) {
+        if (stack.size() == 0 && absolute) {
             return "/";
         }
 
-        StringBuffer result = new StringBuffer();
-        for (String el : stack) {
-            result.append(el);
-        }
-
-        return result.toString();
+        return stack.stream().collect(Collectors.joining());
     }
 
 }
