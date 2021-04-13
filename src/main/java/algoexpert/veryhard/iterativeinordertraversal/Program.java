@@ -22,6 +22,7 @@ public class Program {
         return null;
     }
 
+    //TODO make it more optimal, without Set
     public static void iterativeInOrderTraversal(
             BinaryTree tree, Function<BinaryTree, Void> callback) {
         // Write your code here.
