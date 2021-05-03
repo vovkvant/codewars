@@ -2,52 +2,37 @@ package algoexpert.hard.maxpathinbinary;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 class Program {
     public static void main(String args[]) {
         TestBinaryTree test = new TestBinaryTree(1);
-        //test.insert(new int[] {2, 3, 4, 5, 6, 7}, 0);
-        test.insert(new int[] {2, -1}, 0);
-        maxPathSum(test);
+        test.insert(new int[]{2, 3, 4, 5, 6, 7}, 0);
+        //test.insert(new int[]{2, -1}, 0);
+        //test.insert(new int[] {-5, 3, 6}, 0);
+        System.out.println(maxPathSum(test));
     }
 
-    public static int maxPathSum(BinaryTree tree) {
-        // Write your code here.
-        List<Integer> leftSum = sum(tree.left);
-        List<Integer> rightSum = sum(tree.right);
-        leftSum.add(0);
-        rightSum.add(0);
-        List<Integer> newList = new ArrayList<>();
-        for(Integer ls : leftSum) {
-            for(Integer rs : rightSum) {
-                newList.add(ls + rs + tree.value);
-            }
-        }
-        System.out.println(newList);
-        return Collections.max(newList);
+    public static int maxPathSum(BinaryTree root) {
+        List<Integer> list = new ArrayList<>();
+        int result = maxPathSum2(root, list);
+        return Stream.concat(list.stream(), Stream.of(result)).max(Integer::compareTo).get();
     }
 
-    static List<Integer> sum(BinaryTree tree) {
-        if(tree.left == null && tree.right == null) {
-            List<Integer> newList = new ArrayList<>();
-            newList.add(tree.value);
-            return newList;
-        }
-        if(tree.left == null || tree.right == null) {
-            return new ArrayList<>();
-        }
-        List<Integer> leftSum = sum(tree.left);
-        List<Integer> rightSum = sum(tree.right);
-        List<Integer> newList = new ArrayList<>();
-        for(int i = 0; i < leftSum.size(); i++) {
-            newList.add(leftSum.get(i) + tree.value);
-        }
-        for(int i = 0; i < rightSum.size(); i++) {
-            newList.add(rightSum.get(i) + tree.value);
-        }
-        return newList;
+    public static int maxPathSum2(BinaryTree root, List<Integer> list) {
+        if (root == null) return 0;
+        int leftMaxPathSum = maxPathSum2(root.left, list);
+        int rightMaxPathSum = maxPathSum2(root.right, list);
+
+        int maxAll = root.value + leftMaxPathSum + rightMaxPathSum;
+        leftMaxPathSum += root.value;
+        rightMaxPathSum += root.value;
+
+        list.add(maxAll);
+        list.add(leftMaxPathSum);
+        list.add(rightMaxPathSum);
+        return Stream.of(leftMaxPathSum, rightMaxPathSum, root.value).max(Integer::compareTo).get();
     }
 
     static class BinaryTree {
