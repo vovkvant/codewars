@@ -26,6 +26,14 @@ public class Program {
 
     }
 
+
+    //create recursive solution
+    public static BinaryTree rightSiblingTree2(BinaryTree root) {
+        // Write your code here.
+        return root;
+    }
+
+
     public static BinaryTree rightSiblingTree(BinaryTree root) {
         // Write your code here.
         List<BinaryTree> binaryTreeList = new ArrayList<>();

@@ -60,6 +60,13 @@ public class Program {
                 }
             }
         }
+        for(List<Integer> sub:subLists) {
+            List<Character> result = new ArrayList<>();
+            for(Integer i : sub) {
+                result.add(strArr2[i]);
+            }
+            System.out.println(result);
+        }
         List<Character> result = new ArrayList<>();
         for(Integer i : longestSublist) {
             result.add(strArr2[i]);

@@ -14,14 +14,11 @@ public class Program {
 
     public static void main(String args[]) {
         LinkedList head = new LinkedList(0);
-        /*
         head.next = new LinkedList(1);
         head.next.next = new LinkedList(2);
         head.next.next.next = new LinkedList(2);
         head.next.next.next.next = new LinkedList(1);
         head.next.next.next.next.next = new LinkedList(0);
-        */
-
 
         Program p =new Program();
         System.out.print(p.linkedListPalindrome(head));
@@ -37,24 +34,17 @@ public class Program {
         }
         LinkedList middleHead = slowNode;
 
-        //revert from middle
-        LinkedList prev = middleHead;
+        //revert from middlemiddleHead
         LinkedList current = middleHead.next;
-        LinkedList next = null;
-        if(current!=null) {
-            next = current.next;
-        }
-        prev.next = null;
+        middleHead.next = null;
         while(current!=null) {
-            current.next = prev;
-            prev = current;
+            LinkedList next = current.next;
+            current.next = middleHead;
+            middleHead = current;
             current = next;
-            if(next!=null) {
-                next = next.next;
-            }
         }
 
-        LinkedList tail = prev;
+        LinkedList tail = middleHead;
         while(tail!=null && head!=null) {
             if(tail.value != head.value) {
                 return false;
